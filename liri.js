@@ -1,12 +1,14 @@
 // Reads and sets any environment variables with the dotenv package. 
 require("dotenv").config();
 
+var Spotify = require('node-spotify-api');
+
 var keys= require("./keys.js");
 
 var moment = require('moment'); // require
 
 
-// var spotify = new spotify(keys.spotify);
+var spotify = new Spotify(keys.spotify);
 
 var axios = require("axios");
 
@@ -57,7 +59,18 @@ function concertThis(){
 };
 
 function spotifyThisSong(){
-    console.log("Spotify is for music so this command is for music")
+    spotify.search({type: "track", query: searchvalue, limit:1 }, function(err, data) {
+        if (err) {
+          return console.log('Error occurred: ' + err);
+        }
+       console.log("Ah yes, " + searchvalue + " I know all about that song. Here's what I know: ");
+       console.log("=================================================");
+       console.log(searchvalue + " is by "+ data.tracks.items[0].artists[0].name);
+       console.log("++++++++++++++++++++++++++++++");
+       console.log("It's part of their album '"+ data.tracks.items[0].album.name +"' " );
+       console.log("++++++++++++++++++++++++++++++");
+       console.log("You can find the song on spotify: "+ data.tracks.items[0].external_urls.spotify)
+      });
 };
 function movieThis(){
     console.log("Search this movie or smth")
