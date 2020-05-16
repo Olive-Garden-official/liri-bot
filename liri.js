@@ -3,8 +3,12 @@ require("dotenv").config();
 
 var keys= require("./keys.js");
 
-// var spotify = new Spotify(keys.spotify);
+var moment = require('moment'); // require
 
+
+// var spotify = new spotify(keys.spotify);
+
+var axios = require("axios");
 
 var command = process.argv[2];
 
@@ -35,7 +39,21 @@ switch(command){
 }
 
 function concertThis(){
-    console.log("Concerts are fun. lets go to one")
+    axios.get("https://rest.bandsintown.com/artists/" + searchvalue + "/events?app_id=codingbootcamp").then(
+  function(response) {
+    //   console.log(response.data);
+    console.log(searchvalue + "'s coming up concerts are listed below:")
+    console.log("=======================================")
+      for (let i = 0; i < response.data.length; i++) {
+        console.log("Venue: " + response.data[i].venue.name)
+        console.log("Located in: " + response.data[i].venue.location)
+        var concertdate = moment(response.data[i].datetime).format('MM DD YYYY');
+        console.log("On " + concertdate);
+        console.log("+++++++++++++++++++++++++++++++++++++")
+          
+      };         
+
+});
 };
 
 function spotifyThisSong(){
@@ -52,7 +70,7 @@ function easterEgg(){
 };
 function iNeedHelp(){
     console.log("This is the help menu!: Please use the following commands:");
-    console.log("=================================");
+    console.log("===========================================================");
     console.log("• concert-this  Searches for bands in your town!");
     console.log("");
     console.log("• spotify-this-song   to search a song on spotify and get cool details about it!");
@@ -60,8 +78,8 @@ function iNeedHelp(){
     console.log("• movie-this   Search for movies here and get lots of facts about the movie.");
     console.log("");
     console.log("• do-what-it-says   Will execute a random command.");
-    console.log("=================================");
-
+    console.log("===========================================================");
+    console.log("Currently, only 1 command and one search term is supported. If you're search term contains multiple words, please use quotations. Example: 'The Matrix'")
 };
 function invalidCommand(){
     console.log("Please use a valid command. Use 'Help' for more information")
